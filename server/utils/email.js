@@ -1,41 +1,44 @@
 const nodemailer = require('nodemailer');
 
 async function createTransport() {
-  if (process.env.EMAIL_HOST) {
-    return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: Number(process.env.EMAIL_PORT || 587),
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
-  }
-  // Fallback: ethereal test account for dev
-  const testAccount = await nodemailer.createTestAccount();
+  // Use Gmail SMTP
   return nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS // This should be an app-specific password
     },
+    tls: {
+      rejectUnauthorized: false
+    }
   });
 }
 
 module.exports = async function sendEmail({ email, subject, message, html }) {
-  const transporter = await createTransport();
-  const from = process.env.EMAIL_FROM || 'EduSpace Scheduler <no-reply@eduspace.local>';
-  const info = await transporter.sendMail({ from, to: email, subject, text: message, html });
-  if (!process.env.EMAIL_HOST) {
-    console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
+  try {
+    const transporter = await createTransport();
+    const from = process.env.EMAIL_FROM || 'EduSpace Scheduler <' + process.env.EMAIL_USER + '>';
+    
+    const mailOptions = {
+      from,
+      to: email,
+      subject,
+      text: message,
+      html: html || `
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+          <h2>EduSpace Email Verification</h2>
+          <p>${message}</p>
+        </div>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent: ', info.messageId);
+    return true;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
   }
-  return true;
 };
 
 // Simple email templates
