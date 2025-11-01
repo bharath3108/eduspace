@@ -1,0 +1,12 @@
+/* HUD Toasts */
+.hud-toast-container{ position: fixed; right: 16px; top: 16px; z-index: 99999; display: flex; flex-direction: column; gap: 10px }
+.hud-toast{ min-width: 260px; max-width: 360px; padding: 12px 14px; border-radius: 10px; color: #ccd6f6; background: rgba(10,25,47,0.82); border:1px solid rgba(100,255,218,0.22); box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 18px rgba(100,255,218,0.12) inset; backdrop-filter: blur(8px); display:flex; gap:10px; align-items:center; animation: toastIn .18s ease-out }
+.hud-toast.success{ border-color: rgba(100,255,218,0.5) }
+.hud-toast.error{ border-color: rgba(255,99,71,0.5); color: #ffd0c8 }
+.hud-toast.info{ border-color: rgba(100,255,218,0.3) }
+.hud-toast .hud-icon{ width: 10px; height: 10px; border-radius: 50%; background: #64ffda; box-shadow: 0 0 12px rgba(100,255,218,0.8) }
+.hud-toast.error .hud-icon{ background: #ff6347; box-shadow: 0 0 12px rgba(255,99,71,0.7) }
+.hud-toast .hud-title{ font-weight:700; margin-right: 4px }
+.hud-toast .hud-close{ margin-left:auto; cursor:pointer; color:#8892b0 }
+@keyframes toastIn{ from{ opacity:0; transform: translateY(-6px) } to{ opacity:1; transform: translateY(0) } }
+

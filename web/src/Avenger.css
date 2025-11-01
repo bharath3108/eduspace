@@ -1,0 +1,347 @@
+/* Avenger.css - Clean JARVIS Theme */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #0a192f;
+  --primary: #64ffda;
+  --secondary: #8892b0;
+  --text: #ccd6f6;
+  --card: rgba(10,25,47,0.75);
+  --glass-border: rgba(100,255,218,0.12);
+  --glow: 0 6px 30px rgba(100,255,218,0.08);
+  --radius: 10px;
+  --pad: 1rem 2rem;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0; font-family:'Orbitron',system-ui,Arial,sans-serif;
+  background: var(--bg);
+  color:var(--text);
+  cursor: url('data:image/svg+xml;utf8,<svg height="32" width="32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="8" fill="rgba(100,255,218,0.7)" stroke="rgba(100,255,218,0.9)" stroke-width="2"/></svg>') 16 16, pointer;
+  background: var(--bg); /* Remove all gradients, just solid color for fallback */
+  color:var(--text);
+  overflow-y: auto; /* Allow vertical scrolling */
+}
+
+/* Remove grid background from body::before */
+body::before{
+  content:none;
+}
+
+.bg-anim{
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none; overflow: hidden;
+}
+
+.bg-anim::before {
+  content: '';
+  position: absolute; inset: 0;
+  /* Animated grid lines with pulse */
+  background:
+    repeating-linear-gradient(0deg, rgba(100,255,218,0.04) 0px, rgba(100,255,218,0.04) 1px, transparent 2px, transparent 40px),
+    repeating-linear-gradient(90deg, rgba(100,255,218,0.04) 0px, rgba(100,255,218,0.04) 1px, transparent 2px, transparent 40px);
+  opacity: 0.5;
+  animation: gridPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.bg-anim::after {
+  /* Floating holographic particles */
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(100,255,218,0.18) 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(100,255,218,0.12) 1.5px, transparent 2.5px);
+  background-size: 18px 18px, 40px 40px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.7;
+  animation: dotsDrift 12s linear infinite;
+}
+
+@keyframes dotsDrift {
+  from { background-position: 0 0, 20px 20px; }
+  to { background-position: 80px 80px, -20px -20px; }
+}
+
+/* Add floating holographic circles for extra effect */
+.bg-anim .holo-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(100,255,218,0.18) 0%, rgba(100,255,218,0.04) 70%, transparent 100%);
+  pointer-events: none;
+  animation: floatHolo 8s ease-in-out infinite;
+}
+
+@keyframes floatHolo {
+  0% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-30px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 0.7; }
+}
+
+/* accent subtle vignette */
+.bg-vignette{
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -3; pointer-events: none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%); overflow: hidden;
+}
+
+/* Aggressive HUD scanlines and rotating arc */
+.particles-layer{
+  position: fixed; inset: 0; z-index: -1; pointer-events:none;
+}
+/* Arc Reactor Animation */
+.particles-layer::after {
+    content: '';
+    position: absolute;
+    width: 50vmin;
+    height: 50vmin;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 5px solid rgba(100, 255, 218, 0.2);
+    box-shadow: 
+        0 0 15px rgba(100, 255, 218, 0.2),
+        inset 0 0 15px rgba(100, 255, 218, 0.2),
+        0 0 30px 10px rgba(100, 255, 218, 0.1);
+    animation: rotateArc 14s linear infinite, pulseArc 2s infinite ease-in-out;
+}
+
+.particles-layer::before {
+    content: '';
+    position: absolute;
+    width: 20vmin;
+    height: 20vmin;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(100, 255, 218, 0.1);
+    box-shadow: 
+        0 0 40px 20px rgba(100, 255, 218, 0.2),
+        inset 0 0 10px rgba(100, 255, 218, 0.3);
+    animation: pulseCore 2s infinite ease-in-out, flicker 5s infinite;
+}
+
+@keyframes rotateArc {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes pulseArc {
+    0%, 100% { border-color: rgba(100, 255, 218, 0.2); box-shadow: 0 0 15px rgba(100, 255, 218, 0.2), inset 0 0 15px rgba(100, 255, 218, 0.2), 0 0 30px 10px rgba(100, 255, 218, 0.1); }
+    50% { border-color: rgba(100, 255, 218, 0.5); box-shadow: 0 0 25px rgba(100, 255, 218, 0.5), inset 0 0 25px rgba(100, 255, 218, 0.5), 0 0 50px 20px rgba(100, 255, 218, 0.2); }
+}
+
+@keyframes pulseCore {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); background: rgba(100, 255, 218, 0.1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); background: rgba(100, 255, 218, 0.3); }
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    box-shadow:
+      0 0 40px 20px rgba(100, 255, 218, 0.2),
+      inset 0 0 10px rgba(100, 255, 218, 0.3);
+  }
+  20%, 24%, 55% {
+    box-shadow: none;
+  }
+}
+
+/* Bottom-right corner animation */
+.hud-corner-mask{
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 250px; /* Adjusted size */
+  height: 250px; /* Adjusted size */
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(circle at 100% 100%, rgba(10, 25, 47, 1) 0%, rgba(10, 25, 47, 1) 50%, rgba(10, 25, 47, 0) 70%);
+  animation: hudCornerPulse 4s infinite alternate;
+}
+
+@keyframes hudCornerPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+
+/* Navbar */
+.navbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 28px; gap:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06)); border-bottom:1px solid rgba(255,255,255,0.02); backdrop-filter:blur(8px); box-shadow:var(--glow);
+}
+.navbar .brand-wrap{ display:flex; align-items:center; gap:14px; }
+.brand-badge{ width:54px; height:54px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12)); border:1px solid var(--glass-border); box-shadow:0 6px 18px rgba(0,0,0,0.6), 0 2px 8px rgba(100,255,218,0.04) inset;
+}
+.brand-badge .letter{ color:var(--primary); font-weight:700; font-size:20px; }
+.brand-title{ font-size:20px; color:var(--text); font-weight:600; letter-spacing:0.8px; }
+
+.nav-actions{ display:flex; align-items:center; gap:12px; }
+.nav-actions .link{ color:var(--secondary); text-decoration:none; padding:6px 8px; border-radius:6px; font-weight:600 }
+.nav-actions .cta{ border:1px solid rgba(100,255,218,0.14); padding:8px 14px; border-radius:8px; color:var(--primary); background:transparent; }
+.nav-actions .cta:hover{ background: rgba(100,255,218,0.04); box-shadow:0 6px 20px rgba(100,255,218,0.06); }
+
+.header-divider{ height:1px; background: linear-gradient(90deg, transparent, rgba(100,255,218,0.04), transparent); margin-top:10px }
+
+.header-hero{ padding:40px 28px 24px 28px; }
+.header-hero .container{ max-width:1200px; margin:0 auto; }
+
+@media (max-width:800px){ .navbar{padding:12px 16px} .brand-title{font-size:16px} }
+
+.u-glow:hover{ box-shadow: 0 10px 40px rgba(100,255,218,0.07); transform: translateY(-3px); transition: transform 220ms ease; }
+.text-muted{ color:var(--secondary); }
+
+/* Styles matching the React Navbar component classes */
+.avenger-nav, .navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 28px;
+}
+
+.nav-brand, .brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-emblem, .brand-badge {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6), 0 2px 8px rgba(100,255,218,0.04) inset;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.nav-logo{
+  width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(100,255,218,0.25));
+}
+
+.nav-brand-text, .brand-title {
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-link {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: color 180ms ease, box-shadow 180ms ease;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+  box-shadow: 0 8px 24px rgba(100,255,218,0.06);
+}
+
+/* make mobile layout reasonable */
+@media (max-width:700px){
+  .avenger-nav, .navbar{ flex-direction:column; align-items:flex-start; padding:12px 16px }
+  .nav-links{ width:100%; flex-direction:column; gap:8px; margin-top:8px }
+}
+
+/* End of Avenger.css */
+
+/* Centered content container used by pages like Login */
+.container-centered {
+  width: 100%;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.auth-container {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 28px;
+  background: linear-gradient(145deg, rgba(10,25,47,0.9), rgba(10,25,47,0.8));
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glow);
+}
+
+/* Neon buttons and inputs */
+.btn{ background: transparent; color: var(--primary); border:1px solid rgba(100,255,218,0.3); text-transform:uppercase; letter-spacing:1px; box-shadow:0 0 0 0 rgba(100,255,218,0.2); transition: box-shadow .2s ease, transform .15s ease; }
+.btn:hover{ box-shadow:0 0 18px 2px rgba(100,255,218,0.25), inset 0 0 12px rgba(100,255,218,0.15); transform: translateY(-2px); }
+.form-control{ background: rgba(255,255,255,0.03); border:1px solid rgba(100,255,218,0.14); color: var(--text); }
+.form-control:focus{ border-color: var(--primary); box-shadow:0 0 0 3px rgba(100,255,218,0.18); }
+
+/* Card pulse border */
+.dashboard-card{ position:relative; overflow:hidden }
+.dashboard-card::before{ content:''; position:absolute; inset:-2px; border:1px solid rgba(100,255,218,0.08); filter: drop-shadow(0 0 8px rgba(100,255,218,0.2)); pointer-events:none; animation: borderPulse 2.2s ease-in-out infinite; border-radius:12px }
+@keyframes borderPulse{ 0%,100%{opacity:.6} 50%{opacity:1} }
+
+.auth-container h3{ color:var(--primary); font-size:32px; margin-bottom:18px }
+
+.form-group{ max-width: 100%; }
+.form-control{ max-width: 100%; }
+
+.btn{ max-width: 220px; }
+
+/* Reflective Sheen for cards and containers */
+.auth-container, .dashboard-card {
+  position: relative; /* Needed for pseudo-element positioning */
+  overflow: hidden; /* Keep the sheen inside the rounded corners */
+}
+
+.auth-container::after,
+.dashboard-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    110deg, /* Angle of the sheen */
+    transparent 25%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 75%
+  );
+  background-size: 250% 100%;
+  background-position: -150% 0; /* Start far left */
+  pointer-events: none;
+  z-index: 1;
+  animation: liveReflection 5s linear infinite;
+}
+
+@keyframes liveReflection {
+  0% {
+    background-position: -150% 0;
+  }
+  100% {
+    background-position: 150% 0;
+  }
+}

@@ -1,0 +1,11 @@
+# Netlify Configuration for React App
+[build]
+  publish = "build"
+  command = "npm run build"
+
+# Redirect all routes to index.html for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

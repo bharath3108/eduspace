@@ -1,0 +1,216 @@
+/*
+  Arc Reactor v3 - Rewritten for correct positioning and detail.
+*/
+.arc-reactor-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.arc_reactor {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 50px 15px rgba(100, 255, 218, 0.2), inset 0px 0px 50px 15px rgba(100, 255, 218, 0.2);
+  animation: pulseArc 2s infinite ease-in-out;
+}
+
+.case_container {
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+
+.e7 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.core2 {
+  background: #cedce0;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 5px solid var(--primary);
+  animation: flicker2 2s infinite;
+  box-shadow: 0 0 20px 10px rgba(100, 255, 218, 0.3);
+  z-index: 10;
+}
+
+.marks {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.marks li {
+  display: block;
+  width: 3px;
+  height: 11px;
+  background: rgba(100, 255, 218, 0.7);
+  position: absolute;
+  left: 50%;
+  top: 0;
+  margin-left: -1.5px;
+  transform-origin: center 105px; /* Half of container width */
+  animation: colour_ease2 3s infinite ease-in-out;
+}
+
+.semi_arc_3 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transform: translate(-50%, -50%);
+}
+
+.e5_1 {
+  width: 100%; /* 210px */
+  height: 100%;
+  border-top-color: var(--primary);
+  border-left-color: var(--primary);
+  animation: rotateArc 14s linear infinite;
+}
+
+.e5_2 {
+  width: 90%;
+  height: 90%;
+  border-top-color: var(--primary);
+  border-right-color: var(--primary);
+  animation: rotateArc 10.5s linear infinite reverse;
+}
+
+.e5_3 {
+  width: 80%;
+  height: 80%;
+  border-bottom-color: var(--primary);
+  border-left-color: var(--primary);
+  animation: rotateArc 7s linear infinite;
+}
+
+.e5_4 {
+  width: 70%;
+  height: 70%;
+  border-bottom-color: var(--primary);
+  border-right-color: var(--primary);
+  animation: rotateArc 3.5s linear infinite reverse;
+}
+
+.e5_5 {
+  width: 60%;
+  height: 60%;
+  border-top-color: var(--primary);
+  border-left-color: var(--primary);
+  animation: rotateArc 2.5s linear infinite;
+}
+
+.e5_6 {
+  width: 50%;
+  height: 50%;
+  border-top-color: var(--primary);
+  border-right-color: var(--primary);
+  animation: rotateArc 1.75s linear infinite reverse;
+}
+
+@keyframes colour_ease2 {
+  0%, 100% { background: rgba(100, 255, 218, 1); }
+  50% { background: rgba(100, 255, 218, 0.3); }
+}
+
+@keyframes flicker2 {
+  0%, 100% { border-color: var(--primary); }
+  50% { border-color: rgba(100, 255, 218, 0.5); }
+}
+
+@keyframes rotateArc {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes pulseArc {
+  0%, 100% { box-shadow: 0px 0px 50px 15px rgba(100, 255, 218, 0.2), inset 0px 0px 50px 15px rgba(100, 255, 218, 0.2); }
+  50% { box-shadow: 0px 0px 60px 20px rgba(100, 255, 218, 0.4), inset 0px 0px 60px 20px rgba(100, 255, 218, 0.4); }
+}
+
+.marks li:nth-child(1) { transform: rotate(6deg); }
+.marks li:nth-child(2) { transform: rotate(12deg); }
+.marks li:nth-child(3) { transform: rotate(18deg); }
+.marks li:nth-child(4) { transform: rotate(24deg); }
+.marks li:nth-child(5) { transform: rotate(30deg); }
+.marks li:nth-child(6) { transform: rotate(36deg); }
+.marks li:nth-child(7) { transform: rotate(42deg); }
+.marks li:nth-child(8) { transform: rotate(48deg); }
+.marks li:nth-child(9) { transform: rotate(54deg); }
+.marks li:nth-child(10) { transform: rotate(60deg); }
+.marks li:nth-child(11) { transform: rotate(66deg); }
+.marks li:nth-child(12) { transform: rotate(72deg); }
+.marks li:nth-child(13) { transform: rotate(78deg); }
+.marks li:nth-child(14) { transform: rotate(84deg); }
+.marks li:nth-child(15) { transform: rotate(90deg); }
+.marks li:nth-child(16) { transform: rotate(96deg); }
+.marks li:nth-child(17) { transform: rotate(102deg); }
+.marks li:nth-child(18) { transform: rotate(108deg); }
+.marks li:nth-child(19) { transform: rotate(114deg); }
+.marks li:nth-child(20) { transform: rotate(120deg); }
+.marks li:nth-child(21) { transform: rotate(126deg); }
+.marks li:nth-child(22) { transform: rotate(132deg); }
+.marks li:nth-child(23) { transform: rotate(138deg); }
+.marks li:nth-child(24) { transform: rotate(144deg); }
+.marks li:nth-child(25) { transform: rotate(150deg); }
+.marks li:nth-child(26) { transform: rotate(156deg); }
+.marks li:nth-child(27) { transform: rotate(162deg); }
+.marks li:nth-child(28) { transform: rotate(168deg); }
+.marks li:nth-child(29) { transform: rotate(174deg); }
+.marks li:nth-child(30) { transform: rotate(180deg); }
+.marks li:nth-child(31) { transform: rotate(186deg); }
+.marks li:nth-child(32) { transform: rotate(192deg); }
+.marks li:nth-child(33) { transform: rotate(198deg); }
+.marks li:nth-child(34) { transform: rotate(204deg); }
+.marks li:nth-child(35) { transform: rotate(210deg); }
+.marks li:nth-child(36) { transform: rotate(216deg); }
+.marks li:nth-child(37) { transform: rotate(222deg); }
+.marks li:nth-child(38) { transform: rotate(228deg); }
+.marks li:nth-child(39) { transform: rotate(234deg); }
+.marks li:nth-child(40) { transform: rotate(240deg); }
+.marks li:nth-child(41) { transform: rotate(246deg); }
+.marks li:nth-child(42) { transform: rotate(252deg); }
+.marks li:nth-child(43) { transform: rotate(258deg); }
+.marks li:nth-child(44) { transform: rotate(264deg); }
+.marks li:nth-child(45) { transform: rotate(270deg); }
+.marks li:nth-child(46) { transform: rotate(276deg); }
+.marks li:nth-child(47) { transform: rotate(282deg); }
+.marks li:nth-child(48) { transform: rotate(288deg); }
+.marks li:nth-child(49) { transform: rotate(294deg); }
+.marks li:nth-child(50) { transform: rotate(300deg); }
+.marks li:nth-child(51) { transform: rotate(306deg); }
+.marks li:nth-child(52) { transform: rotate(312deg); }
+.marks li:nth-child(53) { transform: rotate(318deg); }
+.marks li:nth-child(54) { transform: rotate(324deg); }
+.marks li:nth-child(55) { transform: rotate(330deg); }
+.marks li:nth-child(56) { transform: rotate(336deg); }
+.marks li:nth-child(57) { transform: rotate(342deg); }
+.marks li:nth-child(58) { transform: rotate(348deg); }
+.marks li:nth-child(59) { transform: rotate(354deg); }
+.marks li:nth-child(60) { transform: rotate(360deg); }
