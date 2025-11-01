@@ -1,39 +1,77 @@
 const nodemailer = require('nodemailer');
+let sgMail;
+try {
+  // optional dependency for SendGrid API (not required locally unless configured)
+  sgMail = require('@sendgrid/mail');
+} catch (e) {
+  sgMail = null;
+}
 
 async function createTransport() {
-  // Use Gmail SMTP
+  // Nodemailer transporter (fallback) - allow explicit SMTP configuration via env
+  const host = process.env.EMAIL_HOST;
+  const port = process.env.EMAIL_PORT ? Number(process.env.EMAIL_PORT) : undefined;
+  const secure = process.env.EMAIL_SECURE === 'true' || port === 465;
+
+  if (host) {
+    return nodemailer.createTransport({
+      host,
+      port: port || 587,
+      secure: !!secure,
+      auth: process.env.EMAIL_USER ? { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS } : undefined,
+      tls: { rejectUnauthorized: process.env.NODE_ENV === 'production' }
+    });
+  }
+
+  // Default to a simple localhost transporter (useful for local dev with e.g. MailHog)
   return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS // This should be an app-specific password
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
+    host: 'localhost',
+    port: 1025,
+    secure: false,
   });
 }
 
 module.exports = async function sendEmail({ email, subject, message, html }) {
   try {
+    const htmlBody = html || `
+      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+        <h2>EduSpace Email Verification</h2>
+        <p>${message}</p>
+      </div>
+    `;
+
+    // If SendGrid API key is provided, prefer the SendGrid API (HTTP) — avoids SMTP blocking
+    if (process.env.SENDGRID_API_KEY && sgMail) {
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      const msg = {
+        to: email,
+        from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+        subject,
+        text: message,
+        html: htmlBody,
+      };
+      const response = await sgMail.send(msg);
+      console.log('SendGrid sent, status:', response && response[0] && response[0].statusCode);
+      return true;
+    }
+
+    // Fallback: use SMTP via Nodemailer
     const transporter = await createTransport();
-    const from = process.env.EMAIL_FROM || 'EduSpace Scheduler <' + process.env.EMAIL_USER + '>';
-    
-    const mailOptions = {
-      from,
-      to: email,
-      subject,
-      text: message,
-      html: html || `
-        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-          <h2>EduSpace Email Verification</h2>
-          <p>${message}</p>
-        </div>
-      `
-    };
+    const from = process.env.EMAIL_FROM || (process.env.EMAIL_USER ? ('EduSpace Scheduler <' + process.env.EMAIL_USER + '>') : 'EduSpace Scheduler <no-reply@eduspace.local>');
+
+    const mailOptions = { from, to: email, subject, text: message, html: htmlBody };
+
+    // Some hosts (like Render) may block outbound SMTP. Add a verify step to surface connection errors earlier.
+    try {
+      await transporter.verify();
+    } catch (verifyErr) {
+      console.error('SMTP verify failed:', verifyErr);
+      // rethrow so caller sees the real error
+      throw verifyErr;
+    }
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent: ', info.messageId);
+    console.log('Email sent (SMTP): ', info && info.messageId);
     return true;
   } catch (error) {
     console.error('Error sending email:', error);
