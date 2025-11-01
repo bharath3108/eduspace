@@ -12,7 +12,19 @@ const io = new Server(http, {
   cors: { origin: '*', methods: ['GET','POST','PUT','DELETE'] }
 });
 
-app.use(cors());
+// Configure CORS with specific options
+app.use(cors({
+  origin: [
+    'https://eduspace-frontend.onrender.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://vscode.dev'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 const uri = process.env.ATLAS_URI;
@@ -36,6 +48,11 @@ app.use('/users', usersRouter);
 app.use('/bookings', bookingsRouter);
 app.use('/auth', authRouter);
 app.use('/auth', resendRouter);
+
+// Handle GitHub OAuth callback
+app.get('/callback', (req, res) => {
+  res.redirect('https://eduspace-frontend.onrender.com');
+});
 
 io.on('connection', (socket) => {
   console.log('socket connected', socket.id);
