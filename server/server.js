@@ -13,19 +13,13 @@ const io = new Server(http, {
 });
 
 // Configure CORS with specific options
-app.use(cors({
-  origin: [
-    'https://eduspace-frontend.onrender.com',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'https://vscode.dev'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+app.use(cors());
 app.use(express.json());
+
+// Basic route for root path
+app.get('/', (req, res) => {
+  res.send('EduSpace API is running');
+});
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri);
@@ -49,9 +43,15 @@ app.use('/bookings', bookingsRouter);
 app.use('/auth', authRouter);
 app.use('/auth', resendRouter);
 
-// Handle GitHub OAuth callback
-app.get('/callback', (req, res) => {
-  res.redirect('https://eduspace-frontend.onrender.com');
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// Handle 404 - Keep this as the last route
+app.use((req, res, next) => {
+  res.status(404).send('Route not found');
 });
 
 io.on('connection', (socket) => {
