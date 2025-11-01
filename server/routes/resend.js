@@ -60,8 +60,10 @@ router.post('/resend-verification', async (req, res) => {
         res.status(200).send('A new verification email has been sent.');
 
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error resending verification email.');
+        console.error('Resend verification error:', error);
+        // Return the real error message in development to aid debugging.
+        const msg = process.env.NODE_ENV === 'production' ? 'Error resending verification email.' : (error.message || 'Error resending verification email.');
+        res.status(500).send(msg);
     }
 });
 
