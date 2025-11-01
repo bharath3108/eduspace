@@ -139,14 +139,18 @@ Copy your Render backend URL. You'll need it for the frontend deployment.
 
 ### 4.1 Prepare Frontend Environment Variables
 
-Create a file `web/.env.production` (this will be used during build):
+**You have two options:**
+
+**Option A (Recommended):** Set environment variables directly in Netlify dashboard (see Step 4.4 below). This is the easiest and recommended approach.
+
+**Option B (Optional):** If you prefer, you can create a file `web/.env.production` with:
 
 ```env
 REACT_APP_API_URL=https://your-app-name.onrender.com
 REACT_APP_SOCKET_URL=https://your-app-name.onrender.com
 ```
 
-**Replace `your-app-name.onrender.com` with your actual Render backend URL from Step 3.**
+**Note:** Environment variables set in Netlify dashboard will override this file, so Option A is recommended.
 
 ### 4.2 Deploy via Netlify Dashboard
 
