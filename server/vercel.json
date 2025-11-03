@@ -1,11 +1,10 @@
 {
   "version": 2,
   "functions": {
-    "api/index.js": { "runtime": "nodejs18.x" }
+    "api/**/*.js": { "runtime": "nodejs20.x" }
   },
   "routes": [
-    { "src": "/(rooms|users|bookings|auth)(.*)", "dest": "/api/index.js" },
-    { "src": "/", "dest": "/api/index.js" }
+    { "src": "/(rooms|users|bookings|auth)(.*)", "dest": "/api/index.js" }
   ]
 }
 
