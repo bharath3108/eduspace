@@ -1,4 +1,3 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -12,7 +11,7 @@ const io = new Server(http, {
   cors: { origin: '*', methods: ['GET','POST','PUT','DELETE'] }
 });
 
-// Configure CORS with specific options
+// Configure CORS with permissive defaults; restrict via FRONTEND_URL in env if needed
 app.use(cors());
 app.use(express.json());
 

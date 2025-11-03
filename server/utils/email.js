@@ -1,17 +1,28 @@
 const nodemailer = require('nodemailer');
 
 async function createTransport() {
-  // Use Gmail SMTP by default (expects app-specific password or valid SMTP creds)
+  // If explicit SMTP host is provided, honor it (recommended for production)
+  if (process.env.EMAIL_HOST) {
+    const port = Number(process.env.EMAIL_PORT || 587);
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port,
+      secure: port === 465, // true for 465, false for 587
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      connectionTimeout: 15000,
+    });
+  }
+
+  // Fallback to Gmail service when only user/pass are given
   return nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS // This should be an app-specific password or SMTP password
+      pass: process.env.EMAIL_PASS,
     },
-    tls: {
-      // allow self-signed certs in development; production should use valid certs
-      rejectUnauthorized: process.env.NODE_ENV === 'production'
-    }
   });
 }
 
