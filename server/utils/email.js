@@ -1,5 +1,37 @@
 const nodemailer = require('nodemailer');
 
+// Prefer API-based email (no SMTP) when RESEND_API_KEY is provided.
+// This avoids outbound SMTP port blocks that some hosts enforce.
+async function sendViaResend({ email, subject, message, html }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null; // signal to try SMTP fallback
+
+  const body = {
+    from: process.env.EMAIL_FROM || `EduSpace Scheduler <no-reply@eduspace.local>`,
+    to: [email],
+    subject,
+    html: html || `<p>${message}</p>`,
+    text: message,
+  };
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Resend API error: ${res.status} ${errText}`);
+  }
+  const data = await res.json();
+  console.log('Email sent via Resend:', data?.id || data);
+  return true;
+}
+
 async function createTransport() {
   // If explicit SMTP host is provided, honor it (recommended for production)
   if (process.env.EMAIL_HOST) {
@@ -17,17 +49,32 @@ async function createTransport() {
   }
 
   // Fallback to Gmail service when only user/pass are given
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+  }
+
+  // Local/dev fallback to Ethereal (no real emails, but you get a preview URL in logs)
+  const testAccount = await nodemailer.createTestAccount();
   return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,
+    auth: { user: testAccount.user, pass: testAccount.pass },
   });
 }
 
 module.exports = async function sendEmail({ email, subject, message, html }) {
   try {
+    // First, try HTTPS provider if configured (avoids SMTP timeouts)
+    const apiResult = await sendViaResend({ email, subject, message, html });
+    if (apiResult) return true;
+
     const transporter = await createTransport();
     const from = process.env.EMAIL_FROM || ('EduSpace Scheduler <' + (process.env.EMAIL_USER || 'no-reply@eduspace.local') + '>');
     

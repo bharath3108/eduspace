@@ -1,0 +1,42 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.log
+logs/
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Node / JS
+node_modules/
+**/node_modules/
+
+# Env files (do not commit secrets)
+.env
+**/.env
+.env.local
+**/.env.local
+
+# Build outputs
+build/
+**/build/
+dist/
+**/dist/
+.tmp/
+
+# Tests / Coverage
+coverage/
+.nyc_output/
+
+# Vercel / Netlify / Render
+.vercel/
+.netlify/
+render.yaml
+
+# Misc
+*.bak
+*.orig
+*.tmp
+
+
